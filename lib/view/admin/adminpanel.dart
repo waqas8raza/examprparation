@@ -6,7 +6,7 @@ import '../../controllers/admincontroller.dart/admincontroller.dart';
 
 
 class Adminpanel extends StatelessWidget {
-  final AdminController _controller = Get.put(AdminController());
+  final DashboradController _controller = Get.put(DashboradController());
 
    Adminpanel({super.key});
 

@@ -3,21 +3,21 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tryout/controllers/admincontroller.dart/adddatacontroller.dart';
 import 'package:tryout/models/adddatamodel/adddatamodel.dart';
+import 'package:tryout/view/quizscreen/quizsubjectscreen.dart';
 import 'package:tryout/view/subjectscreen.dart';
 
 // ignore: must_be_immutable
-class Classesscreen extends StatefulWidget {
- Classesscreen({super.key,required this.title});
+class QuizClassesscreen extends StatefulWidget {
+ QuizClassesscreen({super.key,required this.title});
  String title;
 
   @override
-  State<Classesscreen> createState() => _ClassesscreenState();
+  State<QuizClassesscreen> createState() => _QuizClassesscreenState();
 }
 
-class _ClassesscreenState extends State<Classesscreen> {
+class _QuizClassesscreenState extends State<QuizClassesscreen> {
  Admincontroller controller=Get.put(Admincontroller());
   RxList<Question>filteredList=<Question>[].obs;
-  RxSet<Question>filterset=<Question>{}.obs;
 
   Widget build(BuildContext context) {
     // List<Question>filteredList=controller.questionlist
@@ -30,7 +30,7 @@ class _ClassesscreenState extends State<Classesscreen> {
       
       body:FutureBuilder(future: controller.fetchclassFromFirebase(), builder: (context, snapshot) {
         if(snapshot.connectionState==ConnectionState.done){
-           List<Question> filteredList = [];
+            List<Question> filteredList = [];
           Set<String> uniqueClassNames = Set();
 
           for (var question in controller.questionlist) {
@@ -40,6 +40,8 @@ class _ClassesscreenState extends State<Classesscreen> {
             }
         //  filteredList.value=controller.questionlist.where((element) => element.title==widget.title).toList();
           }
+        
+        
         return  GridView.builder(
                               itemCount:filteredList.length,
                               
@@ -49,7 +51,7 @@ class _ClassesscreenState extends State<Classesscreen> {
                                  padding: const EdgeInsets.all(8.0),
                                  child: InkWell(
                                    onTap: () {
-                                    Get.to(Subjectscreen(title:filteredList[index].classname!));
+                                    Get.to(QuizSubjectscreen(title:filteredList[index].classname!));
                                   },
                                    child:    Container(
                                     decoration: BoxDecoration(

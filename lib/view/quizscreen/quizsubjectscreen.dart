@@ -5,41 +5,43 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tryout/controllers/admincontroller.dart/adddatacontroller.dart';
 import 'package:tryout/models/adddatamodel/adddatamodel.dart';
-import 'package:tryout/res/styles/textstyle.dart';
-import 'package:tryout/view/mcqsscreen.dart';
+import 'package:tryout/view/chapterscreen.dart';
+import 'package:tryout/view/quizscreen/quizchapterscreen.dart';
 
-class Chapterscreen extends StatelessWidget {
- Chapterscreen({super.key,required this.title});
+class QuizSubjectscreen extends StatelessWidget {
+ QuizSubjectscreen({super.key,required this.title});
  String title;
  Admincontroller controller=Get.put(Admincontroller());
  
   @override
   Widget build(BuildContext context) {
-List<Question> filteredList = [];
+   List<Question> filteredList = [];
           Set<String> uniqueClassNames = Set();
 
           for (var question in controller.questionlist) {
-            if (question.subject == title && !uniqueClassNames.contains(question.chapter)) {
+            if (question.classname == title && !uniqueClassNames.contains(question.subject)) {
               filteredList.add(question);
-              uniqueClassNames.add(question.chapter!);
+              uniqueClassNames.add(question.subject!);
             } 
           }
-    return Scaffold(  
-      appBar: AppBar(title: Text(title),),
+    
+    return Scaffold(
+      
+      appBar: AppBar(title: Text("Subjects $title"),),
+
+      
       body:  GridView.builder(
               itemCount: filteredList.length,
               
-              gridDelegate:  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1,childAspectRatio: 3), itemBuilder: (context, index) {
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1,childAspectRatio: 3), itemBuilder: (context, index) {
                return Padding(
                 
                  padding: const EdgeInsets.all(8.0),
                  child: InkWell(
                   onTap: () {
-                    Get.to(Mcqsscreen(title: filteredList[index].chapter!,sub: "$title",));
+                    Get.to(QuizChapterscreen(title: filteredList[index].subject!));
                   },
-                   child: 
-                   
-                   Container(
+                   child:    Container(
                     decoration: BoxDecoration(
                       image: const DecorationImage(image: AssetImage('assets/learner.png')),
                       color: Colors.indigo.shade200,
@@ -59,12 +61,12 @@ List<Question> filteredList = [];
                         children: [
                           const Padding(
                             padding: EdgeInsets.only(top: 8,bottom: 0,left: 8,right: 8),
-                            child: Text("Chapter",style:TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
+                            child: Text("Subject",style:TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
                           ),
                           Padding(
                             padding:  EdgeInsets.only(left: 20.w),
                             child: Text(
-                              filteredList[index].chapter!,style:const TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),),
+                              filteredList[index].subject!,style:const TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),),
                           ),
                         ],
                       ),

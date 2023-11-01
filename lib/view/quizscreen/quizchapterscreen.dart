@@ -5,17 +5,17 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tryout/controllers/admincontroller.dart/adddatacontroller.dart';
 import 'package:tryout/models/adddatamodel/adddatamodel.dart';
-import 'package:tryout/res/styles/textstyle.dart';
 import 'package:tryout/view/mcqsscreen.dart';
+import 'package:tryout/view/quizscreen/startquizscreen.dart';
 
-class Chapterscreen extends StatelessWidget {
- Chapterscreen({super.key,required this.title});
+class QuizChapterscreen extends StatelessWidget {
+ QuizChapterscreen({super.key,required this.title});
  String title;
  Admincontroller controller=Get.put(Admincontroller());
  
   @override
   Widget build(BuildContext context) {
-List<Question> filteredList = [];
+    List<Question> filteredList = [];
           Set<String> uniqueClassNames = Set();
 
           for (var question in controller.questionlist) {
@@ -24,8 +24,11 @@ List<Question> filteredList = [];
               uniqueClassNames.add(question.chapter!);
             } 
           }
-    return Scaffold(  
+    return Scaffold(
+      
       appBar: AppBar(title: Text(title),),
+
+      
       body:  GridView.builder(
               itemCount: filteredList.length,
               
@@ -35,7 +38,7 @@ List<Question> filteredList = [];
                  padding: const EdgeInsets.all(8.0),
                  child: InkWell(
                   onTap: () {
-                    Get.to(Mcqsscreen(title: filteredList[index].chapter!,sub: "$title",));
+                    Get.to(StartquizMcqsscreen(title: filteredList[index].chapter!,sub: "$title",));
                   },
                    child: 
                    

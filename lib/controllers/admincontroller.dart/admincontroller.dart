@@ -8,7 +8,7 @@ import 'package:tryout/view/admin/adminpages/addtitle.dart';
 import '../../view/admin/adminpages/addchapter.dart';
 import '../../view/admin/dashboardpage.dart';
 
-class AdminController extends GetxController {
+class DashboradController extends GetxController {
   var selectedPageIndex = 0.obs;
 
   void changePage(int index) {

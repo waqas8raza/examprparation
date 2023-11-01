@@ -1,13 +1,13 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tryout/controllers/admincontroller.dart/adddatacontroller.dart';
 import 'package:tryout/view/classesscreen.dart';
+import 'package:tryout/view/quizscreen/quizclasscrenn.dart';
 
 // ignore: must_be_immutable
-class Homescreen extends StatelessWidget {
-  Homescreen({Key? key});
+class Quizscreen extends StatelessWidget {
+  Quizscreen({Key? key});
 
   List images = ['assets/carousel.png', 'assets/learner.png'];
 
@@ -29,13 +29,6 @@ class Homescreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    onTap: () {
-                      controller.issearching.value==true;
-                    },
-                    onChanged: (value) {
-                      
-                      controller.filterSearchResults(value);
-                    },
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Search',
@@ -46,79 +39,12 @@ class Homescreen extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            " Hi",
-                            style: TextStyle(fontSize: 40),
-                            textAlign: TextAlign.right,
-                          ),
-                          Text(
-                            "Learner!",
-                            style: TextStyle(fontSize: 40),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.w,
-                  ),
-                  // Image(image: AssetImage('assets/splash.png')),
-                  Container(
-                    height: 16.h,
-                    width: 40.w,
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: const Image(
-                          image: AssetImage('assets/learner.png'),
-                          fit: BoxFit.fill,
-                        )),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 1.h),
-            CarouselSlider(
-              options: CarouselOptions(
-                autoPlay: true,
-                enlargeCenterPage: true,
-                viewportFraction: 1,
-                scrollDirection: Axis.vertical,
-                autoPlayCurve: Curves.easeInCubic,
-              ),
-              items: images.map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: AssetImage(i),
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
-            ),
+           
             const Center(
                 child: Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                'All Courses',
+                'All Quizes',
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -131,7 +57,7 @@ class Homescreen extends StatelessWidget {
               FutureBuilder(future: controller.fetchtitleFromFirebase(), builder: (context, snapshot) {
                 if(snapshot.hasData){
 return  GridView.builder(
-                  itemCount:controller.issearching.value?controller.filteredList.length: controller.titlelist.length,
+                  itemCount: controller.titlelist.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1, childAspectRatio: 4),
                   itemBuilder: (context, index) {
@@ -139,7 +65,7 @@ return  GridView.builder(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                           onTap: () {
-                            Get.to(Classesscreen(
+                            Get.to(QuizClassesscreen(
                                 title: controller.titlelist[index].title));
                           },
                           child: Container(
@@ -163,7 +89,7 @@ return  GridView.builder(
                                   child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                 controller.issearching.value?controller.filteredList[index].title: 
+                                  
                                   controller.titlelist[index].title,
                                   style: const TextStyle(
                                       overflow: TextOverflow.ellipsis,
@@ -182,7 +108,7 @@ return  GridView.builder(
                 else{
                   return const Center(child: CircularProgressIndicator());
                 }
-              },),
+              },)
              
               ),
           

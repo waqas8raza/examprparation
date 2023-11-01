@@ -26,35 +26,89 @@ class Admincontroller extends GetxController{
      final RxList<Chaptermodel> chapterlist=<Chaptermodel>[].obs;
      final RxList<Subjectmodel> subjectlist=<Subjectmodel>[].obs;
      final List<Question> questionlist=[];
+   final  RxBool iscorrect=true.obs;
+     RxBool isselected=false.obs;
+     RxBool issearching=false.obs;
+     var score=0.obs;
 @override
   void onInit() {
-   fetchtitleFromFirebase();
+   
+   //fetchtitleFromFirebase();
     fetchclassFromFirebase();
     fetchchapterFromFirebase();
     fetchsubjectFromFirebase();
     fetchquestionFromFirebase();
     super.onInit();
   }
+//searching
+ RxList<Titlemodel> filteredList = <Titlemodel>[].obs;
 
+  void filterSearchResults(String query) {
+    filteredList.clear();
+    if (query.isEmpty) {
+      filteredList.assignAll(titlelist);
+    } else {
+      filteredList.addAll(titlelist.where(
+        (item) => item.title.toLowerCase().contains(query.toLowerCase()),
+      ));
+    }
+  }
+
+  var selectedOptions = <Map<String, dynamic>>[].obs;
+
+  void markOptionAsSelected(Question question, int optionIndex) {
+    var selectedQuestion = selectedOptions.firstWhere(
+      (element) =>
+          element['questionId'] == question.id,
+      orElse: () => <String, dynamic>{
+        'questionId': question.id ?? '',
+        'selectedOption': -1,
+      },
+    );
+
+    if (selectedQuestion['selectedOption'] != -1) {
+      return;
+    } if (question.options![optionIndex].isCorrect!) {
+      score++;
+    }
+
+    selectedQuestion['selectedOption'] = optionIndex;
+    selectedOptions.add(selectedQuestion);
+  }
+
+  bool isOptionSelected(Question question, int optionIndex) {
+    var selectedQuestion = selectedOptions.firstWhere(
+      (element) =>
+          element['questionId'] == question.id,
+      orElse: () => <String, dynamic>{
+        'questionId': question.id ?? '',
+        'selectedOption': -1,
+      },
+    );
+
+    return selectedQuestion['selectedOption'] == optionIndex;
+  }
   
 Future<List<Titlemodel>> fetchtitleFromFirebase() async {
   try {
+    titlelist.clear();
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('titles').get();
 
     for (QueryDocumentSnapshot doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       Titlemodel titlemodel = Titlemodel.fromJson(data);
-      titlelist.value.add(titlemodel);
+      titlelist.add(titlemodel);
+     
     }
-    print(titlelist.length);
   } catch (e) {
     print('Error fetching data from Firebase: $e');
   }
 
-  return titlelist.value; 
+  return titlelist; 
 }
 Future<List<Classmodel>> fetchclassFromFirebase() async {
+  
   try {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('classes').get();
@@ -62,16 +116,17 @@ Future<List<Classmodel>> fetchclassFromFirebase() async {
     for (QueryDocumentSnapshot doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       Classmodel classmodel = Classmodel.fromJson(data);
-      classeslist.value.add(classmodel);
+      classeslist.add(classmodel);
     }
     print(classeslist.length);
   } catch (e) {
     print('Error fetching data from Firebase: $e');
   }
 
-  return classeslist.value; 
+  return classeslist; 
 }
 Future<List<Chaptermodel>> fetchchapterFromFirebase() async {
+  chapterlist.clear();
   try {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('chapters').get();
@@ -79,16 +134,17 @@ Future<List<Chaptermodel>> fetchchapterFromFirebase() async {
     for (QueryDocumentSnapshot doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       Chaptermodel chaptermodel = Chaptermodel.fromJson(data);
-      chapterlist.value.add(chaptermodel);
+      chapterlist.add(chaptermodel);
     }
     print(chapterlist.length);
   } catch (e) {
     print('Error fetching data from Firebase: $e');
   }
 
-  return chapterlist.value; 
+  return chapterlist; 
 }
 Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
+  subjectlist.clear();
   try {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('subjects').get();
@@ -96,14 +152,14 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
     for (QueryDocumentSnapshot doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       Subjectmodel subjectmodel = Subjectmodel.fromJson(data);
-      subjectlist.value.add(subjectmodel);
+      subjectlist.add(subjectmodel);
     }
     print(chapterlist.length);
   } catch (e) {
     print('Error fetching data from Firebase: $e');
   }
 
-  return subjectlist.value; 
+  return subjectlist; 
 }
   void setTrueIndex(int index) {
     trueindex.value = index;
@@ -120,13 +176,13 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
           color: Colors.white,
           border: Border.all(),borderRadius: BorderRadius.circular(10)),
         child: ListView.builder(
-          itemCount: titlelist.value.length,
+          itemCount: titlelist.length,
           itemBuilder: (context, index) {
             return ListTile(
               title: Text(titlelist[index].title.toString()),
               onTap: () {
                 Get.back();
-                titlec.value.text = titlelist.value[index].title.toString();
+                titlec.value.text = titlelist[index].title.toString();
               },
             );
           },
@@ -143,13 +199,13 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
           color: Colors.white,
           border: Border.all(),borderRadius: BorderRadius.circular(10)),
         child: ListView.builder(
-          itemCount: chapterlist.value.length,
+          itemCount: chapterlist.length,
           itemBuilder: (context, index) {
             return ListTile(
               title: Text(chapterlist[index].chapter),
               onTap: () {
                 Get.back();
-                chapterc.value.text = chapterlist.value[index].chapter;
+                chapterc.value.text = chapterlist[index].chapter;
               },
             );
           },
@@ -166,12 +222,12 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
           color: Colors.white,
           border: Border.all(),borderRadius: BorderRadius.circular(10)),
         child: ListView.builder(
-          itemCount: classeslist.value.length,
+          itemCount: classeslist.length,
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(classeslist.value[index].classValue),
+              title: Text(classeslist[index].classValue),
               onTap: () {
-                classc.value.text = classeslist.value[index].classValue;
+                classc.value.text = classeslist[index].classValue;
                 Get.back();
               }
             );
@@ -188,12 +244,12 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
             color: Colors.white,
             border: Border.all(),borderRadius: BorderRadius.circular(10)),
           child: ListView.builder(
-            itemCount: subjectlist.value.length,
+            itemCount: subjectlist.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(subjectlist.value[index].subject),
+                title: Text(subjectlist[index].subject),
                 onTap: () {
-                  subjectc.value.text = subjectlist.value[index].subject;
+                  subjectc.value.text = subjectlist[index].subject;
                   Get.back();
                 }
               );

@@ -14,9 +14,17 @@ class Subjectscreen extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    List<Question> filteredList = controller.questionlist
-        .where((question) => question.classname == '$title')
-        .toList();
+      List<Question> filteredList = [];
+          Set<String> uniqueClassNames = Set();
+
+          for (var question in controller.questionlist) {
+            if (question.classname == title && !uniqueClassNames.contains(question.subject)) {
+              filteredList.add(question);
+              uniqueClassNames.add(question.subject!);
+            } 
+          }
+    
+        
     return Scaffold(
       
       appBar: AppBar(title: Text("Subjects $title"),),
