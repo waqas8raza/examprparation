@@ -1,4 +1,7 @@
+// ignore_for_file: void_checks
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tryout/models/adddatamodel/addchaptermodel.dart';
@@ -32,8 +35,6 @@ class Admincontroller extends GetxController{
      var score=0.obs;
 @override
   void onInit() {
-   
-   //fetchtitleFromFirebase();
     fetchclassFromFirebase();
     fetchchapterFromFirebase();
     fetchsubjectFromFirebase();
@@ -43,14 +44,19 @@ class Admincontroller extends GetxController{
 //searching
  RxList<Titlemodel> filteredList = <Titlemodel>[].obs;
 
-  void filterSearchResults(String query) {
-    filteredList.clear();
+ RxString searchText = ''.obs;
+
+ 
+ void filterSearchResults(String query) {
+    searchText.value = query;
     if (query.isEmpty) {
       filteredList.assignAll(titlelist);
     } else {
-      filteredList.addAll(titlelist.where(
-        (item) => item.title.toLowerCase().contains(query.toLowerCase()),
-      ));
+      filteredList.assignAll(
+        titlelist.where(
+          (item) => item.title.toLowerCase().contains(query.toLowerCase()),
+        ).toList(),
+      );
     }
   }
 
@@ -136,7 +142,7 @@ Future<List<Chaptermodel>> fetchchapterFromFirebase() async {
       Chaptermodel chaptermodel = Chaptermodel.fromJson(data);
       chapterlist.add(chaptermodel);
     }
-    print(chapterlist.length);
+
   } catch (e) {
     print('Error fetching data from Firebase: $e');
   }
@@ -154,7 +160,6 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
       Subjectmodel subjectmodel = Subjectmodel.fromJson(data);
       subjectlist.add(subjectmodel);
     }
-    print(chapterlist.length);
   } catch (e) {
     print('Error fetching data from Firebase: $e');
   }
@@ -193,8 +198,7 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
    
   showchapterDropdown(BuildContext context,) {
     Get.bottomSheet(
-      Container(
-        
+      Container(  
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(),borderRadius: BorderRadius.circular(10)),
@@ -216,8 +220,7 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
    
    showclassDropdown(BuildContext context,) {
     Get.bottomSheet(
-      Container(
-        
+      Container(    
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(),borderRadius: BorderRadius.circular(10)),
@@ -258,15 +261,13 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
         ),
       
     );
-  }
-   
-   
-    saveToFirebase()async {
+  } 
+ saveToFirebase()async {
    try{
      List<Options> optionsList = [];
-  for (int i = 0; i < optionc.length; i++) {
+   for (int i = 0; i < optionc.length; i++) {
     optionsList.add(Options(optionText: optionc[i].text, isCorrect: i == trueindex.value));
-  }
+    }
     // Create a Question object based on the form input
     Question question = Question(
     id: uuid.v4(),
