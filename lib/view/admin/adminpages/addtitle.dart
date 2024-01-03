@@ -19,7 +19,7 @@ Admintitlecontroller controller=Get.put(Admintitlecontroller());
           key: controller.formKey,
           child: Column(children: [
             
-             Text('Add TITLE',style: Textstyleclass.textstyle()),
+             Text('ADD TITLE',style: Textstyleclass.textstyle()),
             const SizedBox(height: 20,),
             
             Mytextfield(text: 'Add title', controllers: controller.titlec),

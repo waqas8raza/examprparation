@@ -1,7 +1,6 @@
 // ignore_for_file: void_checks
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tryout/models/adddatamodel/addchaptermodel.dart';
@@ -303,7 +302,6 @@ Future<List<Subjectmodel>> fetchsubjectFromFirebase() async {
   } catch (e) {
     print('Error fetching data from Firebase: $e');
   }
-
   return questionlist;
   
 }

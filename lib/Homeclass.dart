@@ -33,7 +33,7 @@ class Homescreen extends StatelessWidget {
                       onTap: () {
                         controller.issearching.value == true;
                         
-                          controller.filterSearchResults(''); // Reset the list if the query is empty on tap
+                          controller.searchText.value=''; 
                         
                       },
                       onChanged: (value) {
@@ -128,73 +128,72 @@ class Homescreen extends StatelessWidget {
                       color: Colors.black),
                 ),
               )),
-              FutureBuilder(
-              future: controller.fetchtitleFromFirebase(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: controller.searchText.value.isEmpty
-                        ? controller.titlelist.length
-                        : controller.filteredList.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1, childAspectRatio: 4),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: InkWell(
-                            onTap: () {
-                              Get.to(Classesscreen(
-                                  title: controller.issearching.value
-                                      ? controller.filteredList[index].title
-                                      : controller.titlelist[index].title));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  image: const DecorationImage(
-                                      image: AssetImage('assets/learner.png'),
-                                      fit: BoxFit.contain),
-                                  color: Colors.indigo.shade200,
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.grey, // Shadow color
-                                      offset: Offset(
-                                          0, 2), // Shadow offset (x, y)
-                                      blurRadius: 5, // Shadow blur radius
-                                      spreadRadius:
-                                          1, // Spread radius (optional
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  controller.issearching.value
-                                      ? controller.filteredList[index].title
-                                      : controller.titlelist[index].title,
-                                  style: const TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 30,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )),
-                            ),
-                          ));
-                    },
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-                ),
-              
-            ],
-          ),
+               FutureBuilder(
+                            future: controller.fetchtitleFromFirebase(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Obx(() => GridView.builder(
+                                                                  shrinkWrap: true,
+                                                                  itemCount: controller.searchText.value.isEmpty
+                                                                      ? controller.titlelist.length
+                                                                      : controller.filteredList.length,
+                                                                  gridDelegate:
+                                                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                                                          crossAxisCount: 1, childAspectRatio: 4),
+                                                                  itemBuilder: (context, index) {
+                                                                    return Padding(
+                                                                        padding: const EdgeInsets.all(8.0),
+                                                                        child: InkWell(
+                                                                          onTap: () {
+                                                                            Get.to(Classesscreen(
+                                                                                title: controller.searchText.value.isEmpty
+                                                                                    ? controller.titlelist[index].title
+                                                                                    : controller.filteredList[index].title,));
+                                                                          },
+                                                                          child: Container(
+                                                                            decoration: BoxDecoration(
+                                                                                image: const DecorationImage(
+                                                                                    image: AssetImage('assets/learner.png'),
+                                                                                    fit: BoxFit.contain),
+                                                                                color: Colors.indigo.shade200,
+                                                                                boxShadow: const [
+                                                                                  BoxShadow(
+                                                                                    color: Colors.grey, // Shadow color
+                                                                                    offset: Offset(
+                                                                                        0, 2), // Shadow offset (x, y)
+                                                                                    blurRadius: 5, // Shadow blur radius
+                                                                                    spreadRadius:
+                                                                                        1, // Spread radius (optional
+                                                                                  )
+                                                                                ],
+                                                                                borderRadius: BorderRadius.circular(10)),
+                                                                            child: Center(
+                                                                                child: Padding(
+                                                                              padding: const EdgeInsets.all(8.0),
+                                                                              child: Text(
+                                                                                controller.searchText.value.isEmpty
+                                                                                    ? controller.titlelist[index].title
+                                                                                    : controller.filteredList[index].title,
+                                                                                style: const TextStyle(
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                    fontSize: 30,
+                                                                                    color: Colors.white,
+                                                                                    fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                            )),
+                                                                          ),
+                                                                        ));
+                                                                  },
+                                                                ));
+                                                              } else {
+                                                                return const Center(child: CircularProgressIndicator());
+                                                              }
+                                                            },
+                                                              ),
+               
+                          ],
+                        )),
         ),
-      ),
-    );
+      );
   }
 }

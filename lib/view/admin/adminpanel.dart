@@ -20,10 +20,6 @@ class Adminpanel extends StatelessWidget {
       sideBar: SideBar(
         items: const [
           AdminMenuItem(
-            title: 'Dashboard',
-            icon: Icons.dashboard,
-          ),
-          AdminMenuItem(
             title: 'Add MCQS',
             icon: Icons.add,
           ),
@@ -50,23 +46,21 @@ class Adminpanel extends StatelessWidget {
         selectedRoute: '/',
         onSelected: (item) {
           switch(item.title){
-            case 'Dashboard':
+            
+            case 'Add MCQS':
             _controller.changePage(0);
             break;
-            case 'Add MCQS':
+            case 'Add TITLE':
             _controller.changePage(1);
             break;
-            case 'Add TITLE':
+            case 'Add Class':
             _controller.changePage(2);
             break;
-            case 'Add Class':
+            case 'Add Chapter':
             _controller.changePage(3);
             break;
-            case 'Add Chapter':
-            _controller.changePage(4);
-            break;
             case 'Add Subject':
-            _controller.changePage(5);
+            _controller.changePage(4);
             break;
           }
         },

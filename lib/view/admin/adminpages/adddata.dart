@@ -7,9 +7,12 @@ import 'package:tryout/res/widgets/mytextfield.dart';
 
 class Adddata extends StatelessWidget {
    Adddata({super.key});
+
 Admincontroller controller=Get.put(Admincontroller());
+
   @override
   Widget build(BuildContext context) {
+    controller.fetchtitleFromFirebase();
     return  Scaffold(body:  SafeArea(child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
@@ -17,7 +20,7 @@ Admincontroller controller=Get.put(Admincontroller());
           key: controller.formKey,
           child: Column(children: [
             
-             Text('Add MCQS',style: Textstyleclass.textstyle()),
+             Text('ADD MCQS',style: Textstyleclass.textstyle()),
             const SizedBox(height: 20,),
             Obx(
 ()=>       Mytextfield(text: 'Select Title', controllers: controller.titlec.value,readonly: true,onTap:() =>controller.showtitleDropdown(context) ,iconbutton: IconButton(onPressed: () =>controller.showtitleDropdown(context)
