@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:tryout/Homeclass.dart';
 import 'package:tryout/controllers/bottombarcontroller/bottombarcontroller.dart';
+import 'package:tryout/view/admin/contactusscreen.dart';
 import 'package:tryout/view/quizscreen/quizscreen.dart';
 
 
@@ -67,7 +68,7 @@ class _BottomnavigationbarState extends State<Bottomnavigationbar> {
             selectedScreen = Quizscreen();
             break;
           case 2:
-            selectedScreen = Homescreen();
+            selectedScreen = Contactus();
             break;
           
         }

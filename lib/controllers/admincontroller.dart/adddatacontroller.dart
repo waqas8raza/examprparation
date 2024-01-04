@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tryout/bottombarscreen.dart';
 import 'package:tryout/models/adddatamodel/addchaptermodel.dart';
 import 'package:tryout/models/adddatamodel/addclassmodel.dart';
 import 'package:tryout/models/adddatamodel/addsubjectmodel.dart';
@@ -32,6 +33,7 @@ class Admincontroller extends GetxController{
      RxBool isselected=false.obs;
      RxBool issearching=false.obs;
      var score=0.obs;
+     var selectedOptions = <Map<String, dynamic>>[].obs;
 @override
   void onInit() {
     fetchclassFromFirebase();
@@ -59,40 +61,115 @@ class Admincontroller extends GetxController{
     }
   }
 
-  var selectedOptions = <Map<String, dynamic>>[].obs;
-
-  void markOptionAsSelected(Question question, int optionIndex) {
+ void markOptionAsSelected(Question question, int optionIndex) {
     var selectedQuestion = selectedOptions.firstWhere(
-      (element) =>
-          element['questionId'] == question.id,
+      (element) => element['questionId'] == question.id,
       orElse: () => <String, dynamic>{
         'questionId': question.id ?? '',
         'selectedOption': -1,
+        'isCorrect': false,
       },
     );
 
     if (selectedQuestion['selectedOption'] != -1) {
       return;
-    } if (question.options![optionIndex].isCorrect!) {
-      score++;
     }
 
     selectedQuestion['selectedOption'] = optionIndex;
+    selectedQuestion['isCorrect'] =
+        question.options![optionIndex].isCorrect;
+
     selectedOptions.add(selectedQuestion);
+
+    // Force rebuild to reflect changes in UI
+    update();
   }
 
   bool isOptionSelected(Question question, int optionIndex) {
     var selectedQuestion = selectedOptions.firstWhere(
-      (element) =>
-          element['questionId'] == question.id,
+      (element) => element['questionId'] == question.id,
       orElse: () => <String, dynamic>{
         'questionId': question.id ?? '',
         'selectedOption': -1,
+        'isCorrect': false,
       },
     );
 
     return selectedQuestion['selectedOption'] == optionIndex;
   }
+
+  void showResults(String title,String sub ) {
+    int score = 0;
+
+    List<Question> filteredList = questionlist
+        .where((question) =>
+            question.chapter == title && question.subject == "$sub")
+        .toList();
+
+    for (var selectedOption in selectedOptions) {
+      if (selectedOption['isCorrect'] == true) {
+        score++;
+      }
+    }
+
+    Get.defaultDialog(
+      title: 'Quiz Result',
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Your Score: $score out of ${filteredList.length}',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 16),
+          for (Question question in filteredList)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  question.mcqsq!,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                Row(
+                  children: [
+                    for (Options option in question.options!)
+                      Expanded(
+                        child: Card(
+                          color: (option.isCorrect!)
+                              ? Colors.green
+                              : (selectedOptions
+                                          .firstWhere((element) =>
+                                              element['questionId'] ==
+                                              question.id)['selectedOption'] ==
+                                      question.options!.indexOf(option))
+                                  ? Colors.red
+                                  : Colors.transparent,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              option.optionText!,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+        ],
+      ),
+      confirm: ElevatedButton(
+        onPressed: () {
+          // Navigate back to StartquizMcqsscreen
+          Get.back();
+        },
+        child: const Text('Back'),
+      ),
+    );
+  }
+
   
 Future<List<Titlemodel>> fetchtitleFromFirebase() async {
   try {

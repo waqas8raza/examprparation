@@ -4,7 +4,6 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tryout/controllers/admincontroller.dart/adddatacontroller.dart';
 import 'package:tryout/models/adddatamodel/adddatamodel.dart';
 import 'package:tryout/view/quizscreen/quizsubjectscreen.dart';
-import 'package:tryout/view/subjectscreen.dart';
 
 // ignore: must_be_immutable
 class QuizClassesscreen extends StatefulWidget {
