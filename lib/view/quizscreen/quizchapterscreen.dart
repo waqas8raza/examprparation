@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tryout/controllers/admincontroller.dart/adddatacontroller.dart';
 import 'package:tryout/models/adddatamodel/adddatamodel.dart';
-import 'package:tryout/view/mcqsscreen.dart';
 import 'package:tryout/view/quizscreen/startquizscreen.dart';
 
 class QuizChapterscreen extends StatelessWidget {

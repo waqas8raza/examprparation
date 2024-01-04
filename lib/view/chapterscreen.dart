@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tryout/controllers/admincontroller.dart/adddatacontroller.dart';
 import 'package:tryout/models/adddatamodel/adddatamodel.dart';
-import 'package:tryout/res/styles/textstyle.dart';
 import 'package:tryout/view/mcqsscreen.dart';
 
 class Chapterscreen extends StatelessWidget {

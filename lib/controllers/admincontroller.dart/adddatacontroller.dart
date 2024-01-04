@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tryout/bottombarscreen.dart';
 import 'package:tryout/models/adddatamodel/addchaptermodel.dart';
 import 'package:tryout/models/adddatamodel/addclassmodel.dart';
 import 'package:tryout/models/adddatamodel/addsubjectmodel.dart';

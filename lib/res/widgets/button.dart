@@ -3,6 +3,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tryout/res/constants/colors.dart';
 import 'package:tryout/res/styles/textstyle.dart';
 
+// ignore: must_be_immutable
 class Mybutton extends StatelessWidget {
    Mybutton({super.key,required this.text,required this.ontap,this.icon});
 String text;
